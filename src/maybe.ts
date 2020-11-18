@@ -1,6 +1,5 @@
 const isNullish = <T>(value: T | null | undefined): value is null | undefined => value === null || value === undefined;
 
-
 interface Container {
   map: (...args: any) => any;
   tap: (...args: any) => any;
@@ -17,8 +16,20 @@ class Maybe<T> implements Container {
     return new Maybe<T>(value);
   }
 
-  public getValue(): T | null | undefined {
-    return this.value;
+  public getValue(): T | undefined {
+    return isNullish(this.value) ? undefined : this.value;
+  }
+
+  public getValueOr<X>(or: X): T | X {
+    return isNullish(this.value) ? or : this.value;
+  }
+
+  public getValueOrThrow(error: Error): T {
+    if (!isNullish(this.value)) {
+      return this.value;
+    }
+
+    throw error;
   }
 
   public map<X>(func: (value: T) => X | null | undefined): Maybe<X> {
