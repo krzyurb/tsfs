@@ -8,7 +8,6 @@ interface Person {
 }
 
 const p1: Person = { name: 'a', age: 10 };
-const p2: Person = { name: 'a' };
 const p3: Person = { age: 32 };
 
 // Maybe
@@ -42,7 +41,7 @@ console.log(eitherResult.getValue());
 
 // IO
 
-let val: number = 0;
+let val = 0;
 const ioResult = io(() => val+=10)
   .map((d) => d*=2)
   .map((d) => d*=2)

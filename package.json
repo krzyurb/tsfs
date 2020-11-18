@@ -1,9 +1,30 @@
 {
   "name": "leibniz",
-  "version": "1.0.0",
-  "main": "index.ts",
+  "version": "0.0.1",
   "license": "MIT",
+  "main": "lib/src/index.js",
+  "types": "lib/src/index.d.ts",
+  "files": ["lib/**/*"],
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn typecheck && yarn lint:fix && yarn test"
+    }
+  },
+  "scripts": {
+    "build": "rm -rf ./lib && yarn tsc -p .",
+    "test": "yarn jest",
+    "lint": "yarn eslint --ext .ts src/ --fix",
+    "prepare": "yarn build",
+    "typecheck": "yarn tsc --project tsconfig.json --noEmit --pretty false"
+  },
   "devDependencies": {
+    "@types/jest": "26.0.14",
+    "@typescript-eslint/eslint-plugin": "3.0.2",
+    "@typescript-eslint/parser": "3.0.2",
+    "eslint": "7.1.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.1",
+    "ts-jest": "26.3.0",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.5"
   }

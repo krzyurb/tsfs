@@ -2,7 +2,7 @@ interface Container<T> {
   getValue: () => T | Error;
 }
 
-interface EitherType<T> extends Container<T> {
+export interface EitherType<T> extends Container<T> {
   flatMap<R>(func: (value: T) => Either<R> | Left): EitherType<R>;
   try<R>(func: (value: T) => R): EitherType<R>;
   tap(func: (value: T | Error) => void): this;
@@ -62,6 +62,6 @@ class Left extends Either<Error> implements EitherType<Error> {
   }
 }
 
-export const either = <T>(value: T) => new Either(value);
-export const left = (error: Error) => new Left(error);
-export const right = <T>(value: T) => new Right(value);
+export const either = <T>(value: T): Either<T> => new Either(value);
+export const left = (error: Error): Left => new Left(error);
+export const right = <T>(value: T): Right<T> => new Right(value);
