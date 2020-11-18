@@ -5,9 +5,10 @@ interface Container<T> {
 interface EitherType<T> extends Container<T> {
   flatMap<R>(func: (value: T) => Either<R> | Left): EitherType<R>;
   try<R>(func: (value: T) => R): EitherType<R>;
+  tap(func: (value: T | Error) => void): this;
 }
 
-export class Either<T> implements EitherType<T> {
+class Either<T> implements EitherType<T> {
   protected readonly value: T;
 
   constructor(value: T) {
@@ -35,18 +36,23 @@ export class Either<T> implements EitherType<T> {
     }
   }
 
-  public static right<V>(value: V): Either<V> {
+  public static right<V>(value: V): Right<V> {
     return new Right(value);
   }
 
   public static left<E extends Error>(error: E): Left {
     return new Left(error);
   }
+
+  public tap(func: (value: T | Error) => void): this {
+    func(this.value);
+    return this;
+  }
 }
 
-export class Right<T> extends Either<T> implements EitherType<T> {}
+class Right<T> extends Either<T> implements EitherType<T> {}
 
-export class Left extends Either<Error> implements EitherType<Error> {
+class Left extends Either<Error> implements EitherType<Error> {
   public flatMap<R = Error>(): EitherType<R> {
     return this;
   }

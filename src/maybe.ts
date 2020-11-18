@@ -6,8 +6,6 @@ interface Container {
   tap: (...args: any) => any;
 }
 
-interface MaybeType extends Container {}
-
 class Maybe<T> implements Container {
   private readonly value: T | null | undefined;
 
@@ -36,7 +34,7 @@ class Maybe<T> implements Container {
     return Maybe.of(result);
   }
 
-  public tap(func: (value: T) => any): this {
+  public tap(func: (value: T) => void): this {
     if (this.value) func(this.value);
     return this;
   }

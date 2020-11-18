@@ -1,11 +1,8 @@
 {
   "name": "leibniz",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.ts",
   "license": "MIT",
-  "dependencies": {
-    "fp-ts": "^2.8.6"
-  },
   "devDependencies": {
     "ts-node": "^9.0.0",
     "typescript": "^4.0.5"
