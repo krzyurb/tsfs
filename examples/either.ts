@@ -1,4 +1,18 @@
+import { maybe } from 'src';
 import * as L from '..';
+
+class X<T> {
+  private readonly val: T;
+  constructor(val: T) {
+    this.val = val;
+  }
+
+  public getVal(): T | null | undefined {
+    return this.val;
+  }
+}
+
+const dupa = (...args: any): number | null => null;
 
 interface Person {
   age?: number | null;
@@ -6,14 +20,17 @@ interface Person {
 }
 
 const p1: Person = { name: 'a', age: 10 };
+const p2: Person = { name: 'a' };
 const p3: Person = { age: 32 };
 
 // Maybe
 
-const maybeResult = L.maybe(p1)
-  .map(p => p.age)
-  .tap(p => console.log('Taped', p))
-  .map(p => p * 10);
+const maybeResult = L.maybe(p2)
+  .map(p => p.name)
+  .getValue();
+  // .tap(p => console.log('Taped', p))
+  // .map(p => p * 10);
+
 
 console.log(maybeResult.getValue());
 
@@ -31,9 +48,7 @@ const eitherResult = L.either(p3)
     ? L.right(d.name)
     : L.left(new Error('No name defined'));
   })
-  .try((d) => {
-    return d;
-  })
+  .map((d) => d);
 
 console.log(eitherResult.getValue());
 

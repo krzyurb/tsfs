@@ -1,23 +1,28 @@
-const isNullish = <T>(value: T | null | undefined): value is null | undefined => value === null || value === undefined;
+const isNullish = <T>(value: T | null | undefined): value is (null | undefined) => value === null || value === undefined;
 
-interface Container {
-  map: (...args: any) => any;
-  tap: (...args: any) => any;
+// interface Container<T> {
+//   getValue: () => T | null;
+// }
+
+export interface MaybeType<T> {// extends Container<T> {
+  getValue: () => T | null;
+  // map<R>(func: (value: T) => R): MaybeType<R>;
+  // tap(func: (value: T | Error) => void): this;
 }
 
-class Maybe<T> implements Container {
-  private readonly value: T | null | undefined;
+class Maybe<T> implements MaybeType<T> {
+  protected readonly value: T;
 
-  constructor(value: T | null | undefined) {
+  constructor(value: T) {
     this.value = value;
   }
 
-  public static of<T>(value: T | null | undefined): Maybe<T> {
+  public static of<T>(value: T): Maybe<T> {
     return new Maybe<T>(value);
   }
 
-  public getValue(): T | undefined {
-    return isNullish(this.value) ? undefined : this.value;
+  public getValue(): T | null {
+    return this.value ? this.value : null;
   }
 
   public getValueOr<X>(or: X): T | X {
@@ -32,22 +37,34 @@ class Maybe<T> implements Container {
     throw error;
   }
 
-  public map<X>(func: (value: T) => X | null | undefined): Maybe<X> {
+  public map<X>(func: (value: T) => X): MaybeType<any> {
     if (isNullish(this.value)) {
-      return Maybe.of<X>(this.value);
+      return Nothing.of(null);
     }
 
     const result = func(this.value);
     if (isNullish(result)) {
-      return Maybe.of<X>(result)
+      return Nothing.of(null);
     }
 
-    return Maybe.of(result);
+    return Just.of(result);
   }
 
   public tap(func: (value: T) => void): this {
     if (this.value) func(this.value);
     return this;
+  }
+}
+
+class Nothing extends Maybe<null> implements MaybeType<null> {
+  public getValue(): null {
+    return null;
+  }
+}
+
+class Just<T> extends Maybe<T> implements MaybeType<T> {
+  public getValue(): T {
+    return this.value;
   }
 }
 

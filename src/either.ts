@@ -4,7 +4,7 @@ interface Container<T> {
 
 export interface EitherType<T> extends Container<T> {
   flatMap<R>(func: (value: T) => Either<R> | Left): EitherType<R>;
-  try<R>(func: (value: T) => R): EitherType<R>;
+  map<R>(func: (value: T) => R): EitherType<R>;
   tap(func: (value: T | Error) => void): this;
 }
 
@@ -27,8 +27,7 @@ class Either<T> implements EitherType<T> {
     return func(this.value);
   }
 
-
-  public try<R>(func: (value: T) => R): EitherType<R> {
+  public map<R>(func: (value: T) => R): EitherType<R> {
     try {
       return new Right(func(this.value));
     } catch (error) {
@@ -57,7 +56,7 @@ class Left extends Either<Error> implements EitherType<Error> {
     return this;
   }
 
-  public try<R>(): EitherType<R> {
+  public map<R>(): EitherType<R> {
     return this;
   }
 }

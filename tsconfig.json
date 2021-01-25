@@ -10,11 +10,12 @@
     "sourceMap": true,
     "outDir": "./lib",
     "baseUrl": "./",
-    "incremental": true
+    "incremental": true,
+    "strict": true,
   },
   "exclude": [
     "node_modules",
     "test",
-    "lib",
+    "lib"
   ]
 }
